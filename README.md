@@ -101,7 +101,7 @@ Follow these steps to set up and run the Currency Conversion Service locally.
 ### Database Setup
 
 1. Create your PostgreSQL database.
-2. Run the SQL script in the `tables_creation.sql` file to create the necessary tables.
+2. Run the SQL script in the `src/Contexts/Shared/infrastructure/persistence/postgres-create-tables.sql` file to create the necessary tables in your database.
 
 <!-- TOC --><a name="running-the-application"></a>
 
