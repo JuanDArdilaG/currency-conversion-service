@@ -1,8 +1,4 @@
-import {
-  IRepository,
-  IPaginatedRepository,
-  PaginationResult,
-} from "../../domain/persistence/repository";
+import { IRepository } from "../../domain/persistence/repository";
 import { PostgresDB } from "./postgres.db";
 
 /**
@@ -84,51 +80,4 @@ export abstract class PostgresRepository<T> implements IRepository<T> {
    * Must be implemented by subclasses
    */
   protected abstract mapToDomain(record: any): T;
-}
-
-/**
- * PostgreSQL repository with pagination support
- */
-export abstract class PaginatedPostgresRepository<T>
-  extends PostgresRepository<T>
-  implements IPaginatedRepository<T>
-{
-  /**
-   * Find entities with pagination
-   */
-  async findPaginated(
-    page: number,
-    size: number
-  ): Promise<PaginationResult<T>> {
-    // Calculate offset based on page and size
-    const offset = page * size;
-
-    // Get paginated results
-    const query = `
-      SELECT * FROM ${this.tableName}
-      LIMIT $1 OFFSET $2
-    `;
-
-    const countQuery = `SELECT COUNT(*) as total FROM ${this.tableName}`;
-
-    // Run both queries in parallel
-    const [dataResult, countResult] = await Promise.all([
-      this.db.query(query, [size, offset]),
-      this.db.query(countQuery),
-    ]);
-
-    const items = dataResult.rows.map((row) => this.mapToDomain(row));
-    const total = parseInt(countResult.rows[0].total, 10);
-    const pages = Math.ceil(total / size);
-
-    return {
-      items,
-      total,
-      page,
-      size,
-      pages,
-      hasNext: page < pages - 1,
-      hasPrev: page > 0,
-    };
-  }
 }

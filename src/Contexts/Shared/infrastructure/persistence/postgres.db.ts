@@ -38,7 +38,6 @@ export class PostgresDB {
     const query = client.query;
     const release = client.release;
 
-    // It comes from official documentation
     const timeout = setTimeout(() => {
       console.error("A client has been checked out for more than 5 seconds!");
       console.error(

@@ -48,10 +48,7 @@ export abstract class RedisCacheService<T> implements CacheService<T> {
       }${redisConfig.host}:${redisConfig.port}`,
     });
     this.client.connect();
-    // this.intialize();
   }
-
-  // abstract intialize(): Promise<void>;
 
   async get(key: string): Promise<T | null> {
     const result = await this.client.get(key);
