@@ -1,4 +1,6 @@
 import express from "express";
+import cors from "cors";
+import helmet from "helmet";
 import { registerDependencies } from "../../Contexts/Shared/infrastructure/di/container";
 import { createConversionsRouter } from "./routes/conversions.routes";
 import { errorHandler } from "./middlewares/error-handler.middleware";
@@ -12,6 +14,8 @@ async function bootstrap() {
   const app = express();
 
   app.use(express.json());
+  app.use(cors());
+  app.use(helmet());
 
   app.use(`${apiPrefix}/conversions`, createConversionsRouter(container));
   app.use(`${apiPrefix}/users`, createUsersRouter(container));
